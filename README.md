@@ -1,2 +1,2 @@
 # topsis
-Topsis assignment:
+In this assignment, TOPSIS was implemented to rank different models based on multiple criteria such as accuracy, speed, memory usage, and F1-score. The data was first normalized and multiplied by assigned weights to ensure fair comparison. Then, the ideal best and ideal worst values were identified based on whether the criteria were beneficial or non-beneficial. The distance of each model from these ideal solutions was calculated, and a TOPSIS score was obtained. Based on these scores, the models were ranked. The program was written in Python and generated an output file containing the final scores and rankings, helping in selecting the best model objectively.
