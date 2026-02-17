@@ -1,0 +1,54 @@
+import pandas as pd
+import numpy as np
+import sys
+
+def topsis(input_file, weights, impacts, output_file):
+
+    data = pd.read_excel(input_file)
+
+    matrix = data.iloc[:, 1:].values.astype(float)
+
+    weights = np.array(weights, dtype=float)
+
+    norm = matrix / np.sqrt((matrix**2).sum(axis=0))
+
+    weighted = norm * weights
+
+    best = []
+    worst = []
+
+    for i in range(len(impacts)):
+        if impacts[i] == '+':
+            best.append(weighted[:, i].max())
+            worst.append(weighted[:, i].min())
+        else:
+            best.append(weighted[:, i].min())
+            worst.append(weighted[:, i].max())
+
+    best = np.array(best)
+    worst = np.array(worst)
+
+    dist_best = np.sqrt(((weighted - best)**2).sum(axis=1))
+    dist_worst = np.sqrt(((weighted - worst)**2).sum(axis=1))
+
+    score = dist_worst / (dist_best + dist_worst)
+
+    rank = score.argsort()[::-1] + 1
+
+    result = data.copy()
+    result["Score"] = score
+    result["Rank"] = rank
+
+    result.to_excel(output_file, index=False)
+
+if __name__ == "__main__":
+
+    input_file = sys.argv[1]
+
+    weights = list(map(float, sys.argv[2].split(',')))
+
+    impacts = sys.argv[3].split(',')
+
+    output_file = sys.argv[4]
+
+    topsis(input_file, weights, impacts, output_file)
